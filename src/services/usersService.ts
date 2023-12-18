@@ -24,6 +24,27 @@ export const fetchUsers = async (): Promise<BaseUser[]> => {
     }
 };
 
+export const fetchUser = async (id: number): Promise<User> => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'API-KEY': API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Error getting the user');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error getting the user', error);
+        throw error;
+    }
+};
+
 export const createUser = async (user: User): Promise<BaseUser> => {
     try {
         const response = await fetch(`${BASE_URL}/api/users`, {
@@ -36,20 +57,20 @@ export const createUser = async (user: User): Promise<BaseUser> => {
         });
 
         if (!response.ok) {
-            throw new Error('Error en la solicitud de useros');
+            throw new Error('Error creating the user');
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al crear el usero:', error);
+        console.error('Error creating the user:', error);
         throw error;
     }
 };
 
-export const updateUser = async (user: BaseUser): Promise<BaseUser> => {
+export const updateUser = async (id: number, user: User): Promise<BaseUser> => {
     try {
-        const response = await fetch(`${BASE_URL}/api/users/${user.id}`, {
+        const response = await fetch(`${BASE_URL}/api/users/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,20 +80,20 @@ export const updateUser = async (user: BaseUser): Promise<BaseUser> => {
         });
 
         if (!response.ok) {
-            throw new Error('Error en la solicitud de useros');
+            throw new Error('Error updating the user');
         }
 
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al actualizar el usero:', error);
+        console.error('Error updating the user:', error);
         throw error;
     }
 }
 
 export const deleteUser = async (id: number): Promise<void> => {
     try {
-        const response = await fetch(`${BASE_URL}/api/users?id=${id}`, {
+        const response = await fetch(`${BASE_URL}/api/users/${id}`, {
             method: 'DELETE',
             headers: {
                 'API-KEY': API_KEY
@@ -80,10 +101,10 @@ export const deleteUser = async (id: number): Promise<void> => {
         });
 
         if (!response.ok) {
-            throw new Error('Error en la solicitud de useros');
+            throw new Error('Error deleting the user');
         }
     } catch (error) {
-        console.error('Error al eliminar el usero:', error);
+        console.error('Error deleting the user:', error);
         throw error;
     }
 }

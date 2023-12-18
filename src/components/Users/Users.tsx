@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { deleteUser, fetchUsers } from "../../services/usersService";
 import { BaseUser } from "../../models/User";
 import styles from "./Users.module.scss";
+import layoutStyles from "../Layout/Layout.module.scss";
 import { formatDate } from "../../helpers/dateHelpers";
 import Search from "./Search/Search";
 import Pagination from "../Pagination/Pagination";
@@ -18,9 +19,7 @@ const Users: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(
-    null
-  );
+  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
   const [alertInfo, setAlertInfo] = useState<{
     message: string;
     type: "success" | "error" | null;
@@ -47,10 +46,7 @@ const Users: React.FC = () => {
   useEffect(() => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredUsers.slice(
-      indexOfFirstItem,
-      indexOfLastItem
-    );
+    const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
     setCurrentUsers(currentItems);
   }, [currentPage, itemsPerPage, filteredUsers]);
 
@@ -117,6 +113,10 @@ const Users: React.FC = () => {
     navigate(`/create`);
   };
 
+  const handleEditUser = (userId: number) => {
+    navigate(`/update/${userId}`);
+  };
+
   const handleCloseAlert = () => {
     setAlertInfo({ message: "", type: null });
   };
@@ -170,7 +170,16 @@ const Users: React.FC = () => {
               <td>{formatDate(user.created_at)}</td>
               <td>{formatDate(user.updated_at)}</td>
               <td>
-                <button onClick={() => confirmDelete(user.id)}>
+                <button
+                  onClick={() => handleEditUser(user.id)}
+                  style={{ marginRight: "5px" }}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => confirmDelete(user.id)}
+                  className={`${layoutStyles.button} ${layoutStyles.secondary}`}
+                >
                   Delete
                 </button>
               </td>
